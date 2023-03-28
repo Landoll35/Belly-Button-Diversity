@@ -59,22 +59,24 @@ function buildCharts(sample) {
   // Deliverable 1: 2. Use d3.json to load the samples.json file 
   d3.json("samples.json").then((data) => {
     console.log(data);
-
+    
     // Deliverable 1: 3. Create a variable that holds the samples array. 
     var samples = data.samples;
 
     // Deliverable 1: 4. Create a variable that filters the samples for the object with the desired sample number.
-    var resultsArray = samples.filter(obj => obj.id == sample);
+    var resultArray = samplesArray.filter(sampleObj => sampleObj.id == sample);
 
     // Deliverable 3: 1. Create a variable that filters the metadata array for the object with the desired sample number.
     var metadata = data.metadata;
-    var gaugeArray = metadata.filter(metaObj => metaObj.id == sample);
+    var resultMetadata = metadataArray.filter(sampleObj => sampleObj.id == sample);
 
     // Deliverable 1: 5. Create a variable that holds the first sample in the array.
     var result = resultsArray[0];
+    console.log(firstSample);
 
     // Deliverable 3: 2. Create a variable that holds the first sample in the metadata array.
-    var gaugeResult = gaugeArray[0];
+    var firstMetadata = resultMetadata[0];
+    console.log(firstMetadata);
 
     // Deliverable 1: 6. Create variables that hold the otu_ids, otu_labels, and sample_values.
     var otuIDs = result.otu_ids;
@@ -82,23 +84,25 @@ function buildCharts(sample) {
     var sampleVals = result.sample_values;
 
     // Deliverable 3: 3. Create a variable that holds the washing frequency.
-    var wfreqs = gaugeResult.wfreq;
-    console.log(wfreqs)
-
+    var wFreq = parseFloat(firstMetadata.wfreq);
 
     // Deliverable 1: 7. Create the yticks for the bar chart.
     // Hint: Get the the top 10 otu_ids and map them in descending order 
     // so the otu_ids with the most bacteria are last. 
-    var yticks = otuIDs.slice(0,10).reverse().map(function (elem) {return `OTU ${elem}`});
+    var yticks = otuIds.slice(0, 10).map(id => "OTU " + id + " ").reverse();
 
     // Deliverable 1: 8. Create the trace for the bar chart. 
     var barData = [{
-      x: xticks,
+      x: sampleValues.slice(0, 10).reverse(),
       y: yticks,
-      type: 'bar',
-      orientation: 'h',
-      text: labels 
-  }];
+      text: otuLabels.slice(0, 10).reverse(),
+      type: "bar",
+      orientation:"h",
+      marker: {
+        color: sampleValues.slice(0, 10).reverse(),
+        colorscale: "Jet"
+      }
+      }];
 
     // Deliverable 1: 9. Create the layout for the bar chart. 
     var barLayout = {
